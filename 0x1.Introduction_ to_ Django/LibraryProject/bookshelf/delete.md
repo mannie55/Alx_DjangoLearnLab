@@ -1,3 +1,5 @@
+<!-- import model -->
+from bookshelf.models import Book
 <!-- retrieve bookto delete -->
 book = Book.objects.get(title="Nineteen Eighty-Four")
 <!-- delete book -->
