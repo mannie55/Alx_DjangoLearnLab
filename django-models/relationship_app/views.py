@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import *
+from .models import Library, Book
 from django.views.generic import DetailView
 
 # Create your views here.
