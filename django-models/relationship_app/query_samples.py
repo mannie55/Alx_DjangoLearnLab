@@ -9,26 +9,33 @@ django.setup()
 from relationship_app.models import *
 
 def query_book_by_authors(author_name):
+   
     try:
         author = Author.objects.get(name=author_name)   
         books = Book.objects.filter(author=author)
         for book in books:
             print(f"title: {book.title}, author: {author.name}")
+    
     except Author.DoesNotExist:
         print("Author does not exist")
 
 def books_in_library(library_name):
+
     try:
         library = Library.objects.get(name=library_name)
         books = library.books.all()
         for book in books:
             print(f"title: {book.title}, library: {library.name}")
+    
     except Library.DoesNotExist:
         print("Library does not exist")
 
 def librarian_for_a_library(librarian_name):
+
     try:
-        library = Librarian.objects.get(name=librarian_name)
-        print(f"librarian: {library.name}, library: {library.library.name}")
-    except Librarian.DoesNotExist:
-        print("Librarian does not exist")
+        library = Librarian.objects.get(library="")
+        librarian = library.librarian
+        print(f"librarian: {librarian.name}, library: {library.name}")
+    
+    except Library.DoesNotExist:
+        print("Library does not exist")
