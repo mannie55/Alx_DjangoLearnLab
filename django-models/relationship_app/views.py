@@ -4,38 +4,38 @@ from django.contrib.auth import login
 from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 
 
 # Create your views here.
 # Function to check if user is an Admin
-def is_admin(user):
+def user_is_admin(user):
     return user.userprofile.role == 'admin'
 
 
 # Function to check if user is a Librarian
-def is_librarian(user):
+def user_is_librarian(user):
     return user.userprofile.role == 'librarian'
 
 # Function to check if user is a Member
-def is_member(user):
+def user_is_member(user):
     return user.userprofile.role == 'member'
 
 # Admin View
-@user_passes_test(is_admin)
+@user_passes_test(user_is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
 
 
 # Librarian View
-@user_passes_test(is_librarian)
+@user_passes_test(user_is_librarian)
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
 
 # Member View
-@user_passes_test(is_member)
+@user_passes_test(user_is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
