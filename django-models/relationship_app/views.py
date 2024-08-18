@@ -8,11 +8,11 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 def list_books(request):
     books = Book.objects.all()
-    return render(request, 'list_books.html', {'books': books})
+    return render(request, 'relationship_app/list_books.html', {'books': books})
 
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'library_detail.html'
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
 def register(request):
@@ -23,7 +23,7 @@ def register(request):
             return redirect("login")
     else:
         form = UserCreationForm()
-    return render(request, "register.html", {"form": form})
+    return render(request, "relationship_app/register.html", {"form": form})
 
 # def login_user(request):
 #     if request.method == 'POST':
