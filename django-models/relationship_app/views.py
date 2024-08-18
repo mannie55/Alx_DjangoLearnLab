@@ -4,8 +4,9 @@ from django.contrib.auth import login
 from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import permission_required
 
 def is_admin(user):
     return user.userprofile.role == 'admin'
