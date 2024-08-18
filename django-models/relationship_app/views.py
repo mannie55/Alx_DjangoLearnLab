@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Library, Book
 from django.contrib.auth import login
 from django.views.generic.detail import DetailView
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 # Create your views here.
 
@@ -26,8 +25,14 @@ def register(request):
         form = UserCreationForm()
     return render(request, "register.html", {"form": form})
 
-class Login(LoginView):
-    template_name = 'login.html'
+def login_user(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect("list_books")
+    else:
+        form = AuthenticationForm()
+    return render(request, "login.html", {"form": form})
 
-class Logout(LogoutView):
-    template_name = 'logout.html'
