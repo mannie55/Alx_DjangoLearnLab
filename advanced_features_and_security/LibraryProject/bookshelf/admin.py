@@ -1,5 +1,12 @@
 from django.contrib import admin
 from .models import Book
+from django.contrib.auth.admin import UserAdmin as CustomUserAdmin
+from .models import CustomUser
+
+class UserAdmin(CustomUserAdmin):
+    pass
+
+admin.site.register(CustomUser, UserAdmin)
 
 # customise Book 
 class Book_admin(admin.ModelAdmin):

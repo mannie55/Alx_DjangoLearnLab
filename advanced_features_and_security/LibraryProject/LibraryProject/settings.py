@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 DATABASES = {
     'default': {
 'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'base',
+        'NAME': 'book',
         'USER': 'root',
         'PASSWORD': 'Indespicableme11#',
         'HOST': 'Localhost',
@@ -127,4 +127,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = 'relationship_app.CustomUser'
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
