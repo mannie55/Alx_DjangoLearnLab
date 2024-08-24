@@ -3,10 +3,9 @@ from .models import Book
 from django.contrib.auth.admin import UserAdmin as CustomUserAdmin
 from .models import CustomUser
 
-class UserAdmin(CustomUserAdmin):
-    pass
 
-admin.site.register(CustomUser, UserAdmin)
+
+admin.site.register(CustomUser, CustomUserAdmin)
 
 # customise Book 
 class Book_admin(admin.ModelAdmin):
