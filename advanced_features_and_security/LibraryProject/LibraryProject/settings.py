@@ -45,6 +45,8 @@ CSP_SCRIPT_SRC = ("'self'",)   # Allow scripts only from your own domain
 CSP_STYLE_SRC = ("'self'",)    # Allow styles only from your own domain
 CSP_IMG_SRC = ("'self'",)      # Allow images only from your own domain
 CSP_FONT_SRC = ("'self'",)     # Allow fonts only from your own domain
+# Configure Django to recognize that the connection is secure when coming through a proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Redirect all non-HTTPS requests to HTTPS.
 # This setting ensures that users are always using a secure connection.
