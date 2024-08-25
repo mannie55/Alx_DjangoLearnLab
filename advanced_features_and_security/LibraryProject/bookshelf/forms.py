@@ -10,6 +10,6 @@ class ExampleForm(forms.ModelForm):
         # Optionally, you can add custom widgets or validation here
 
 # If you need a general form and not related to a model, use:
-class ExampleForm(forms.Form):
+class Example(forms.Form):
     title = forms.CharField(max_length=100)
     author = forms.CharField(max_length=100)
