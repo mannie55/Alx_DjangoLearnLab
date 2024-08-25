@@ -46,6 +46,35 @@ CSP_STYLE_SRC = ("'self'",)    # Allow styles only from your own domain
 CSP_IMG_SRC = ("'self'",)      # Allow images only from your own domain
 CSP_FONT_SRC = ("'self'",)     # Allow fonts only from your own domain
 
+# Redirect all non-HTTPS requests to HTTPS.
+# This setting ensures that users are always using a secure connection.
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS) settings
+# HSTS instructs browsers to only access the site via HTTPS for a specified time.
+# Setting this to 31536000 seconds (1 year) ensures that browsers will remember to use HTTPS for this duration.
+SECURE_HSTS_SECONDS = 31536000
+
+# Include all subdomains in the HSTS policy
+# This setting ensures that the HSTS policy applies to all subdomains of your site.
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# Enable HSTS preloading
+# This setting allows your domain to be included in the HSTS preload list maintained by browsers.
+# Enabling this helps ensure that browsers always use HTTPS from the first visit.
+SECURE_HSTS_PRELOAD = True
+
+# Ensure session cookies are only transmitted over HTTPS.
+# This prevents session cookies from being sent over insecure HTTP connections,
+# which helps protect session data from being intercepted.
+SESSION_COOKIE_SECURE = True
+
+# Ensure CSRF cookies are only transmitted over HTTPS.
+# This prevents CSRF tokens from being sent over insecure HTTP connections,
+# which helps protect against Cross-Site Request Forgery attacks.
+CSRF_COOKIE_SECURE = True
+
+
 
 
 
