@@ -38,5 +38,6 @@ def edit_book(request, pk):
 @permission_required('bookshelf.can_delete')
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
-    book.delete()
+    if request.method == 'POST':
+        book.delete()
     return redirect('book_list') 

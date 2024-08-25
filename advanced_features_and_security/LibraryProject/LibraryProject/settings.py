@@ -23,7 +23,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-px2(lkxi4zmem-*av0qj7xn-(ve(xu9=42+9&9fsq42=+k)w1*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+# This setting enables the X-XSS-Protection header, 
+# which helps prevent Cross-Site Scripting (XSS) attacks by instructing the
+# browser to stop rendering the page if an XSS attack is detected.
+SECURE_BROWSER_XSS_FILTER = True
+# This setting controls the X-Frame-Options header, which determines 
+# whether your site can be embedded in an iframe. 
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+# Ensure that the CSRF cookie is only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+
+# Ensure that the session cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = True
+# Content Security Policy (CSP) Settings
+# The CSP header helps prevent Cross-Site Scripting (XSS) and data injection attacks.
+# This policy restricts the sources from which content (scripts, styles, images, etc.) can be loaded.
+CSP_DEFAULT_SRC = ("'self'",)  # Allow content only from your own domain
+CSP_SCRIPT_SRC = ("'self'",)   # Allow scripts only from your own domain
+CSP_STYLE_SRC = ("'self'",)    # Allow styles only from your own domain
+CSP_IMG_SRC = ("'self'",)      # Allow images only from your own domain
+CSP_FONT_SRC = ("'self'",)     # Allow fonts only from your own domain
+
+
+
+
 
 ALLOWED_HOSTS = []
 
@@ -31,6 +56,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'csp',
     'relationship_app.apps.RelationshipAppConfig',
     'bookshelf.apps.BookshelfConfig',
     'django.contrib.admin',
