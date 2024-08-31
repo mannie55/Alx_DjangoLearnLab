@@ -28,9 +28,20 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# Update your DRF settings in settings.py to include token
+# authentication in the DEFAULT_AUTHENTICATION_CLASSES.
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework.authtoken',
     'api.apps.ApiConfig',
     'rest_framework',
     'django.contrib.admin',

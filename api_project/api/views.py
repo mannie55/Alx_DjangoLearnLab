@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, viewsets
 from .serializers import BookSerializer
 from .models import Book
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
 
@@ -13,4 +14,4 @@ from .models import Book
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    lookup_field = 'title' #use title instead of 'id' as search field
+    permission_classes = [IsAuthenticated]
