@@ -41,6 +41,7 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework.permissions.IsAuthenticated',
     'rest_framework.authtoken',
     'api.apps.ApiConfig',
     'rest_framework',
