@@ -24,16 +24,22 @@ This project is a Django-based REST API to manage books and authors. The API pro
     - Handles custom validation for publication year.
 
 ## Views:
-- **CreateListAuthorView**: Create or list all authors
-- **ListView**: Retrieves all books.
-- **CreateView**: Allows authenticated users to create new books with validation.
-- **DetailView**: Retrieves a single book by its ID.
-- **UpdateView**: Allows updating a book (authenticated users).
-- **DeleteView**: Allows deletion of a book (authenticated users).
-
+- **ListView**: 
+    - Retrieves all books with filtering, searching, and ordering capabilities.
+    - **Filter**: Only books authored by the currently authenticated user.
+    - **Search**: Search by `title` and `author`.
+    - **Order**: Order by `title` or `publication_year`. Default is `title`.
+- **CreateView**: 
+    - Allows authenticated users to create new books with validation for publication year.
+- **DetailView**: 
+    - Retrieves a specific book by its ID.
+- **UpdateView**: 
+    - Allows updating an existing book with validation for publication year.
+- **DeleteView**: 
+    - Allows deletion of a book by its ID.
 ## Permissions:
 - `IsAuthenticatedOrReadOnly`: Allows unauthenticated users to read data, while authenticated users can modify it.
-- `IsAdminUser`: Allows only admins to modify data.
+- `IsAuthenticated`: Allows only authenticated users to modify data.
 
 ## Token Authentication:
 1. Obtain a token by sending a POST request with username and password to `/api/token/`.
