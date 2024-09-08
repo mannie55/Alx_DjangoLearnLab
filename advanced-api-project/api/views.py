@@ -5,8 +5,7 @@ from .models import Book, Author
 from datetime import datetime
 from rest_framework.response import Response
 from rest_framework import status
-from django_filters import rest_framework as filter
-from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
@@ -30,7 +29,7 @@ class ListView(mixins.ListModelMixin, generics.GenericAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [filter.DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['title', 'author', 'publication_year']
     search_fields = ['title', 'author']
     ordering_fields = ['title', 'publication_year']
