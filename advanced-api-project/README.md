@@ -44,13 +44,13 @@ This project is a Django-based REST API to manage books and authors. The API pro
      ```
 
 ## Endpoints:
-- **POST** `api/author-create-list/`: Create a new author.
-- **GET** `api/author-create-list/`: Retrieve all authors.
-- **GET** `api/books-list/`: Retrieve all books.
-- **POST** `api/books-create/`: Create a new book (authenticated).
-- **GET** `api/books-retrieve/<id>/`: Retrieve a specific book.
-- **PUT** `api/books-update/<id>/`: Update a book (authenticated).
-- **DELETE** `api/books-delete/<id>/`: Delete a book (authenticated).
+- **POST** `api/authors/`: Create a new author.
+- **GET** `api/authors/`: Retrieve all authors.
+- **GET** `api/books/`: Retrieve all books.
+- **POST** `api/books/create/`: Create a new book (authenticated).
+- **GET** `api/books/<id>/`: Retrieve a specific book.
+- **PUT** `api/books/update/<id>/`: Update a book (authenticated).
+- **DELETE** `api/books/delete/<id>/`: Delete a book (authenticated).
 
 ## Setup:
 1. Clone the repository.
