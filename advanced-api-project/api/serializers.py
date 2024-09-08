@@ -25,7 +25,7 @@ The relationship between author and book is handled using nested serializers
 
 
 class AuthorSerializer(serializers.ModelSerializer):
-    author_name = serializers.Charfield(source='Author.name', read_only=True)
+    author_name = serializers.CharField(source='Author.name', read_only=True)
 
     """The books field is a nested serializer,
     which dynamically serializes the related
@@ -35,4 +35,4 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Author
-        fields = ['name', 'books']
+        fields = ['name', 'books', 'author_name']
