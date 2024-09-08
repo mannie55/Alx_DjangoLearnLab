@@ -10,7 +10,7 @@ class BookAPITestCase(APITestCase):
     def setUp(self):
         # Create user and author
         self.user = User.objects.create_user(username='testuser', password='password')
-         self.client.login(username='testuser', password='password')
+        self.client.login(username='testuser', password='password')
 
         self.author = Author.objects.create(name='Author One')
         
