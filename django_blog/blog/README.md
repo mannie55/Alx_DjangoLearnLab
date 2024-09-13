@@ -9,7 +9,6 @@ This project implements a user authentication system using Django. It includes f
    - Login
    - Logout
    - Profile Update
-   - Password Reset/Change
 2. [How It Works](#how-it-works)
    - Views
    - Forms
