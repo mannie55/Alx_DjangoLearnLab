@@ -1,7 +1,7 @@
 # Django Authentication System
 
 ## Overview
-This project implements a user authentication system using Django. It includes features such as user registration, login, logout, profile updates, and password management.
+This project implements a user authentication system using Django. It includes features such as user registration, login, logout and profile update.
 
 ## Table of Contents
 1. [Authentication Components](#authentication-components)
