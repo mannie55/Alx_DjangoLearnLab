@@ -21,7 +21,7 @@ Home - Django Blog
             {% if user.is_authenticated %}
                 {% for post in posts %}
                     <li>
-                        <a href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
+                        <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
                         <p>Published on: {{ post.published_date|date:"F d, Y" }}</p>
                     </li>
                     {% empty %}

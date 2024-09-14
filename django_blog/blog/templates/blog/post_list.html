@@ -12,7 +12,7 @@
         <ul>
             {% for post in posts %}
                 <li>
-                    <h2><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+                    <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
                     <p>{{ post.content|truncatewords:30 }}</p> <!-- Display first 30 words of the post -->
                     <small>By {{ post.author }} on {{ post.published_date }}</small>
                 </li>
@@ -24,6 +24,6 @@
     
     <!-- Optionally, link to create a new post if the user is authenticated -->
     {% if user.is_authenticated %}
-        <a href="{% url 'post-create' %}" class="btn btn-primary">Create New Post</a>
+        <a href="{% url 'post_create' %}" class="btn btn-primary">Create New Post</a>
     {% endif %}
 {% endblock %}
