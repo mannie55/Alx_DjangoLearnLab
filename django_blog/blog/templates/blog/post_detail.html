@@ -1,0 +1,22 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    {{ post.title }}
+{% endblock %}
+
+{% block content %}
+    <article>
+        <h1>{{ post.title }}</h1>
+        <p>{{ post.content }}</p>
+        <small>By {{ post.author }} on {{ post.published_date }}</small>
+    </article>
+
+    <!-- Edit and Delete Buttons -->
+    {% if user == post.author %}
+        <a href="{% url 'post-update' post.id %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'post-delete' post.id %}" class="btn btn-danger">Delete</a>
+    {% endif %}
+    
+    <!-- Link to go back to the post list -->
+    <a href="{% url 'post-list' %}" class="btn btn-secondary">Back to Posts</a>
+{% endblock %}
