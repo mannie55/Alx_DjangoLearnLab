@@ -112,7 +112,7 @@ class CommentCreateView(CreateView):
     
     def form_valid(self, form):
         # Associate the comment with the post and user
-        post_id = self.kwargs['post_id']
+        post_id = self.kwargs['pk']
         post = get_object_or_404(Post, id=post_id)
         form.instance.post = post
         form.instance.author = self.request.user
