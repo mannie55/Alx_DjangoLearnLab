@@ -10,7 +10,7 @@
     {% for comment in post.comment.all %}
         <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
         {% if request.user == comment.author %}
-            <a href="{% url 'comment_edit' comment.pk %}">Edit</a> |
+            <a href="{% url 'comment_update' comment.pk %}">Edit</a> |
             <a href="{% url 'comment_delete' comment.pk %}">Delete</a>
         {% endif %}
     {% empty %}
