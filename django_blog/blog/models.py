@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from taggit.managers import TaggableManager
  
 
 class Profile(models.Model):
@@ -13,11 +14,17 @@ class Profile(models.Model):
     def __str__(self) -> str:
         return f'{self.user.username} profile'
 
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=20)
+
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     published_date = models.DateTimeField(auto_now_add=True)
+    tags = TaggableManager()
     
 
     def __str__(self):
@@ -44,4 +51,6 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+
 

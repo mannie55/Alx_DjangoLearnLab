@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from .forms import RegisterForm, UserUpdateForm, ProfileUpdateForm, PostForm, CommentForm
@@ -8,7 +9,7 @@ from .models import Post, Comment
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
+from django.db.models import Q
 
 def register(request):
     if request.method == 'POST':
@@ -102,8 +103,17 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('post_list')
 
     def form_valid(self, form):
-        form.instance.author = self.request.user #set the post author to the current user
+       # Save the form without committing to get a Post instance
+        post = form.save(commit=False)
+        post.author = self.request.user  # Set the post author to the current user
+        post.save()  # Save the Post instance
+
+        # Now that the post has a primary key, save the many-to-many tags
+        form.save_m2m()  # Save the tags
+
         return super().form_valid(form)
+    
+    
     
     
 class CommentCreateView(CreateView):
@@ -130,6 +140,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user #set the post author to the current user
+        form.instance.tags.set(*form.cleaned_data['tags'])
         return super().form_valid(form)
     
     
@@ -178,3 +189,32 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         comment = self.get_object()
         return self.request.user == comment.author
 
+def search(request):
+    query = request.GET.get('q') #get the search query from the request
+    results = []
+
+    if query:
+        #search for posts based on title, content, or tags
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)  # 'tags__name' if using django-taggit
+        ).distinct()   # Use distinct to avoid duplicates if a post matches multiple criteria
+
+    return render(request, 'blog/search_results.html', {'query': query, 'results': results})
+
+# view that filters post based on selected tags
+
+class TagFilteredPostListView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name=tag_name)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag_name'] = self.kwargs.get('tag_name')
+        return context

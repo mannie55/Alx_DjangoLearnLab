@@ -11,15 +11,21 @@
     <header>
         <nav>
             <ul>
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'profile' %}">profile</a></li>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'post_list' %}">Blog Posts</a></li>
-            {% else %}
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'register' %}">Register</a></li>
-            {% endif %}
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'post_list' %}">Blog Posts</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
             </ul>
+
+            <!-- Search form -->
+            <form method="get" action="{% url 'search' %}" class="search-form">
+                <input type="text" name="q" placeholder="Search..." required>
+                <button type="submit">Search</button>
+            </form>
         </nav>
     </header>
 
@@ -32,6 +38,9 @@
     <footer>
         <p>&copy; 2024 Django Blog</p>
     </footer>
+</body>
+</html>
+
 
     <script src="{% static 'js/scripts.js' %}"></script>
 </body>
