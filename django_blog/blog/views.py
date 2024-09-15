@@ -205,7 +205,7 @@ def search(request):
 
 # view that filters post based on selected tags
 
-class TagFilteredPostListView(ListView):
+class PostByTagListView(ListView):
     model = Post
     template_name = 'blog/posts_by_tag.html'
     context_object_name = 'posts'
