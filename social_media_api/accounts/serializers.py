@@ -12,12 +12,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = User
+        model = get_user_model
         fields = ['username', 'password', 'bio', 'profile_picture']
 
     def create(self, validated_data):
         # Use create_user method to handle user creation
-        user = User.objects.create_user(
+        user = get_user_model.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
             bio=validated_data.get('bio', 'not set'),
@@ -31,7 +31,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = get_user_model
         fields = ['id', 'username', 'bio', 'profile_picture']
         #to prevent updates to this fields
         read_only_fields = ['id', 'username', 'followers']

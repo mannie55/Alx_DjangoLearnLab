@@ -6,14 +6,13 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions, status
 from .serializers import UserRegistrationSerializer, UserSerializer
 
-User = get_user_model()
 
 class UserRegistrationView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        User.objects.all()
+        return get_user_model.objects.all()
 
 class CustomAuthToken(ObtainAuthToken):
     
