@@ -12,7 +12,7 @@ class UserRegistrationView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return get_user_model.objects.all()
+        return get_user_model().objects.all()
 
 class CustomAuthToken(ObtainAuthToken):
     
