@@ -4,9 +4,9 @@ from .views import PostViewSet, CommentViewSet, PostFeedView
 
 
 router = DefaultRouter()
-router.register(r'posts', PostViewSet)
-router.register(r'comments', CommentViewSet)
-router.register(r'feed', PostFeedView)
+router.register(r'posts/', PostViewSet)
+router.register(r'comments/', CommentViewSet)
+router.register(r'feed/', PostFeedView)
 
 
 urlpatterns = [
