@@ -35,7 +35,7 @@ class CustomAuthToken(ObtainAuthToken):
         }, status=status.HTTP_201_CREATED)
     
 class UserProfileView(generics.RetrieveUpdateAPIView):
-    queryset = CustomUser.objects.all
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
