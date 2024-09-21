@@ -32,9 +32,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['id', 'username', 'bio', 'profile_picture']
+        fields = ['id', 'username', 'bio', 'profile_picture', 'followers', 'following']
         #to prevent updates to this fields
-        read_only_fields = ['id', 'username', 'followers']
+        read_only_fields = ['id', 'username']
+
+    
 
     def  update(self, instance, validated_data):
         return super().update(instance, validated_data)

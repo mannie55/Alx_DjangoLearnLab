@@ -5,6 +5,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import generics, permissions, status
 from .serializers import UserRegistrationSerializer, UserSerializer
+from rest_framework import generics
+from django.shortcuts import get_object_or_404
+
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -36,3 +39,35 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+User = get_user_model()
+
+class FollowViewSet(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        '''use get_object_or_404 insteand of User.objects.get for better error handling'''
+        user_to_follow = get_object_or_404(User, id=self.kwargs['user_id'])
+
+        if not user.following.filter(id=user_to_follow.id).exists():
+            user.following.add(user_to_follow)  # Add to following
+            return Response({"detail": "User followed successfully"}, status=status.HTTP_200_OK)
+        
+        return Response({"detail": "User already followed"}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class UnfollowViewSet(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user  # The current logged-in user (the one who is trying to unfollow)
+        user_to_unfollow = get_object_or_404(User, pk=self.kwargs['user_id'])  # The user to be unfollowed
+
+        # Check if the user is following the user_to_unfollow
+        if user.following.filter(pk=user_to_unfollow.pk).exists():
+            user.following.remove(user_to_unfollow)  # Unfollow the user
+            return Response({"message": "User unfollowed successfully"}, status=200)
+
+        return Response({"error": "You are not following this user"}, status=400)
