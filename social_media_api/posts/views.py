@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
+from rest_framework.response import Response
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
-
+from django.shortcuts import get_object_or_404
+from accounts.models import CustomUser
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
     """
@@ -37,3 +39,22 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Set the author to the current user before saving the comment.
         serializer.save(author=self.request.user)
+
+class PostFeedView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        '''get the current logged in user'''
+        user = request.user
+
+        '''get all the users the current user is following'''
+        following_users = user.following.all()
+
+        '''get posts from the users that the current user follows'''
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
+
+
