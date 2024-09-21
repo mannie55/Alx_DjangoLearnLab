@@ -7,6 +7,7 @@ from rest_framework import generics, permissions, status
 from .serializers import UserRegistrationSerializer, UserSerializer
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
+from .models import CustomUser
 
 
 
@@ -34,11 +35,10 @@ class CustomAuthToken(ObtainAuthToken):
         }, status=status.HTTP_201_CREATED)
     
 class UserProfileView(generics.RetrieveUpdateAPIView):
+    queryset = CustomUser.objects.all
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_object(self):
-        return self.request.user
 
 
 User = get_user_model()
