@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from rest_framework import viewsets, generics, permissions
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
@@ -30,7 +29,7 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         '''this sets the author to the current user before creating the post'''
@@ -47,7 +46,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
 class PostFeedViewSet(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostSerializer
 
     def get(self, request, *args, **kwargs):
@@ -69,7 +68,7 @@ class PostFeedViewSet(generics.ListAPIView):
 
 @login_required
 def like_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
+    post = generics.get_object_or_404(Post, id=post_id)
     user = request.user
 
     if not Like.objects.filter(post=post, user=user).exists():
@@ -87,7 +86,7 @@ def like_post(request, post_id):
 
 @login_required
 def unlike_post(request, post_id):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     post = get_object_or_404(Post, id=post_id)
     user = request.user
 
