@@ -1,10 +1,16 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, generics, permissions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Post, Comment
+from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from accounts.models import CustomUser
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from notifications.models import Notification
+
+
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
     """
@@ -24,7 +30,7 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthorOrReadOnly, permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         '''this sets the author to the current user before creating the post'''
@@ -40,8 +46,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         # Set the author to the current user before saving the comment.
         serializer.save(author=self.request.user)
 
-class PostFeedView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+class PostFeedViewSet(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
 
     def get(self, request, *args, **kwargs):
@@ -56,5 +62,58 @@ class PostFeedView(generics.ListAPIView):
 
         serializer = self.get_serializer(posts, many=True)
         return Response(serializer.data)
+    
 
 
+
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    user = request.user
+
+    if not Like.objects.filter(post=post, user=user).exists():
+        Like.objects.create(post=post, user=user)
+
+        # Create a notification for the post author
+        Notification.objects.create(
+            recipient=post.author,
+            actor=user,
+            verb='liked your post',
+            target=post
+        )
+    return JsonResponse({"message": "Post liked successfully"}, status=200)
+
+
+@login_required
+def unlike_post(request, post_id):
+    permission_classes = [IsAuthenticated]
+    post = get_object_or_404(Post, id=post_id)
+    user = request.user
+
+    # Check if the user has liked the post
+    like = Like.objects.filter(post=post, user=user).first()
+    if like:
+        like.delete()
+        return JsonResponse({"message": "Post unliked successfully"}, status=200)
+
+    return JsonResponse({"message": "You have not liked this post"}, status=400)
+
+@login_required
+def comment_on_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    user = request.user
+    comment_text = request.POST.get('comment')
+
+    # Create the comment
+    comment = Comment.objects.create(post=post, author=user, content=comment_text)
+
+    # Notify post author of the comment
+    Notification.objects.create(
+        recipient=post.author,
+        actor=user,
+        verb='commented on your post',
+        target=post
+    )
+
+    return JsonResponse({"message": "Comment added successfully"}, status=200)
