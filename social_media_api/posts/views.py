@@ -73,7 +73,7 @@ class LikePostView(generics.GenericAPIView):
     
     def post(self, request, pk, *args, **kwargs):
         # Retrieve the post by its primary key (pk)
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         # Get or create the Like object for the current user and the post
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         
@@ -96,7 +96,7 @@ class UnlikePostView(generics.GenericAPIView):
     
     def post(self, request, pk, *args, **kwargs):
         # Retrieve the post by its primary key (pk)
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         # Try to get the Like object
         like = Like.objects.filter(user=request.user, post=post).first()
         
