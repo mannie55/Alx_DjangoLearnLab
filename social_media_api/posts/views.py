@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 from django.shortcuts import get_object_or_404, redirect
+from rest_framework import status
 from accounts.models import CustomUser
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -66,53 +67,71 @@ class PostFeedViewSet(generics.ListAPIView):
 
 
 
-@login_required
-def like_post(request, post_id):
-    post = generics.get_object_or_404(Post, id=post_id)
-    user = request.user
 
-    if not Like.objects.filter(post=post, user=user).exists():
-        Like.objects.create(post=post, user=user)
-
-        # Create a notification for the post author
-        Notification.objects.create(
-            recipient=post.author,
-            actor=user,
-            verb='liked your post',
-            target=post
-        )
-    return JsonResponse({"message": "Post liked successfully"}, status=200)
-
-
-@login_required
-def unlike_post(request, post_id):
+class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    post = get_object_or_404(Post, id=post_id)
-    user = request.user
+    
+    def post(self, request, pk, *args, **kwargs):
+        # Retrieve the post by its primary key (pk)
+        post = get_object_or_404(Post, pk=pk)
+        # Get or create the Like object for the current user and the post
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        
+        if created:
+            # Create notification for the post author if they are not the one liking the post
+            if post.author != request.user:
+                Notification.objects.create(
+                    recipient=post.author,
+                    actor=request.user,
+                    verb='liked your post',
+                    target=post
+                )
+            return Response({"detail": "Post liked successfully"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"detail": "You already liked this post"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Check if the user has liked the post
-    like = Like.objects.filter(post=post, user=user).first()
-    if like:
-        like.delete()
-        return JsonResponse({"message": "Post unliked successfully"}, status=200)
 
-    return JsonResponse({"message": "You have not liked this post"}, status=400)
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, pk, *args, **kwargs):
+        # Retrieve the post by its primary key (pk)
+        post = get_object_or_404(Post, pk=pk)
+        # Try to get the Like object
+        like = Like.objects.filter(user=request.user, post=post).first()
+        
+        if like:
+            like.delete()
+            return Response({"detail": "Post unliked successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "You haven't liked this post yet"}, status=status.HTTP_400_BAD_REQUEST)
 
-@login_required
-def comment_on_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    user = request.user
-    comment_text = request.POST.get('comment')
 
-    # Create the comment
-    comment = Comment.objects.create(post=post, author=user, content=comment_text)
 
-    # Notify post author of the comment
-    Notification.objects.create(
-        recipient=post.author,
-        actor=user,
-        verb='commented on your post',
-        target=post
-    )
+class CommentOnPostView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    return JsonResponse({"message": "Comment added successfully"}, status=200)
+    def post(self, request, *args, **kwargs):
+        # Get the post object based on the primary key (pk)
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        user = request.user
+
+        # Get the comment text from the request data
+        comment_text = request.data.get('comment')
+        if not comment_text:
+            return Response({"detail": "Comment content cannot be empty"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Create the comment
+        comment = Comment.objects.create(post=post, author=user, content=comment_text)
+
+        # Notify the post author about the new comment (if the commenter is not the author)
+        if user != post.author:
+            Notification.objects.create(
+                recipient=post.author,
+                actor=user,
+                verb='commented on your post',
+                target=post
+            )
+
+        # Return a success message
+        return Response({"message": "Comment added successfully"}, status=status.HTTP_201_CREATED)
