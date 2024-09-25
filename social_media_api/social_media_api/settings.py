@@ -27,6 +27,26 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
+
+SECURE_HSTS_SECONDS = 31536000  # One year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Include subdomains for HSTS
+SECURE_HSTS_PRELOAD = True  # Preload HSTS with browser vendors
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+
+SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade'
+
+
+
+
+
+
 
 # Application definition
 
