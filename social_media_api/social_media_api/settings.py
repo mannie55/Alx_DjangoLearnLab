@@ -26,6 +26,8 @@ SECRET_KEY = 'django-insecure-o3x3zesnh^oin^9c6l8%2p9i^upf3l2%=ydk-fk+z+mqtohy@!
 DEBUG = False
 
 ALLOWED_HOSTS = []
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
